@@ -1,0 +1,16 @@
+stages:
+  - test
+
+.build_template:
+  script:
+    - export
+    - $CXX --version
+    - cmake --version
+    - bash build.sh
+    - bash run.sh test_images/rect_right_100x100_0.bmp test_images/rect_right_100x100_1.bmp test_images/rect_right_100x100_out_u.bmp test_images/rect_right_100x100_out_v.bmp
+  tags:
+    - docker
+
+gcc_11_serial:
+  extends: .build_template
+  image: i10git.cs.fau.de:5005/walberla/buildenvs/gcc:11
