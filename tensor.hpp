@@ -1,6 +1,6 @@
 
 #pragma once
-
+#include <sstream>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -60,7 +60,8 @@ public:
     // Element mutation function
     ComponentType&
     operator()(const std::vector< size_t >& idx);
-
+    // Element mutation function at index
+    ComponentType& operator()(const size_t& idx);
 
 private:
     // TODO: Probably you need some members here...
@@ -313,6 +314,14 @@ ComponentType& Tensor<ComponentType>::operator()(const std::vector< size_t >& id
     return data[0];
 }
 
+
+// Tensor () operator - Element mutation function at index location
+template< Arithmetic ComponentType >
+ComponentType& Tensor<ComponentType>::operator()(const size_t& idx)
+{
+    return data[idx];
+}
+
 // Pretty-prints the tensor to stdout.
 // This is not necessary (and not covered by the tests) but nice to have, also for debugging (and for exercise of course...).
 template< Arithmetic ComponentType >
@@ -328,9 +337,9 @@ operator<<(std::ostream& out, const Tensor< ComponentType >& tensor)
     else if (tensor.rank() == 2)
     {
         size_t index = 0;
-        for (size_t dim_index = 0; dim_index < tensor.rank(); ++dim_index)
+        for (size_t dim_index = 0; dim_index < tensor.shape()[0]; ++dim_index)
         {
-            for (size_t column_index = 0; column_index < tensor.shape()[0]; ++column_index)
+            for (size_t column_index = 0; column_index < tensor.shape()[1]; ++column_index)
             {
                 out << tensor.get_value_at_index(index) << " ";
                 index++;
@@ -354,47 +363,81 @@ operator<<(std::ostream& out, const Tensor< ComponentType >& tensor)
 template< Arithmetic ComponentType >
 Tensor< ComponentType > readTensorFromFile(const std::string& filename)
 {
-    // TODO: Implement this function to read in tensors from file.
-    //       The format is defined in the instructions.
     std::string myText;
     std::ifstream MyReadFile(filename);
     size_t line_number = 0;
-
     size_t tensor_rank = 0;
     std::vector< size_t > tensor_shape;
+    Tensor<ComponentType> output_tensor;
     while (getline (MyReadFile, myText)) {
       if (line_number == 0)
          {
             line_number++;
-            std::vector< size_t > tensor_shape_t(2, 0);
-            tensor_shape = tensor_shape_t;
+            std::stringstream sstream(myText);
+            sstream >> tensor_rank;
+            std::vector< size_t > tensor_shape_t(tensor_rank, 0);
+            tensor_shape = std::move(tensor_shape_t);
          }
       else
         {
             if (line_number<= tensor_rank)
             {
-                tensor_shape[line_number-1] = 3;
+                std::stringstream sstream(myText);
+
+                sstream >> tensor_shape[line_number-1];
                 line_number++;
             }
             else if(line_number == tensor_rank +1)
             {
-                Tensor<float> tensor(tensor_shape);
+                Tensor<ComponentType> output_tensor_t(tensor_shape);
+                output_tensor = std::move(output_tensor_t);
+                output_tensor(line_number - tensor_rank -1) = static_cast<ComponentType>(std::stof(myText));
+                line_number++;
+            }
+            else
+            {
+                output_tensor(line_number - tensor_rank -1) = static_cast<ComponentType>(std::stof(myText));
+                line_number++;
             }
 
         }
 
     }
-    // Close the file
     MyReadFile.close();
-
+    return output_tensor;
 }
 
 // Writes a tensor to file.
 template< Arithmetic ComponentType >
 void writeTensorToFile(const Tensor< ComponentType >& tensor, const std::string& filename)
 {
-    // TODO: Implement this function to write tensors to file.
-    //       The format is defined in the instructions.
+    size_t line_number = 1;
+    size_t shape_index = 0;
+    size_t tensor_index =0;
+    std::ofstream MyFile(filename);
+    while(line_number <= (tensor.numElements()+tensor.rank()+ 1))
+    {
+        if (line_number==1)
+        {
+            MyFile << tensor.rank();
+            MyFile << std::endl;
+        }
+        else if (line_number<=tensor.rank()+1)
+        {
+            MyFile << tensor.shape()[shape_index];
+            MyFile << std::endl;
+            shape_index++;
+        }
+        else
+        {
+            MyFile << tensor.get_value_at_index(tensor_index);
+            MyFile << std::endl;
+            tensor_index++;
+
+        }
+    line_number++;
+    }
+    MyFile.close();
 
 }
 
