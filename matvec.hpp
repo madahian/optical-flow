@@ -135,17 +135,17 @@ template< typename ComponentType >
 Vector< ComponentType > matvec(const Matrix< ComponentType >& mat, const Vector< ComponentType >& vec)
 {
     ComponentType result = 0;
-    assert("Matrix and vector size dose not match" && mat.tensor().shape()[1]==vec.tensor().shape()[0]);
-    Vector< ComponentType > vector_result(mat.shape()[0]);
-    for (size_t i = 0; i < mat.tensor().shape()[0]; ++i)
+    assert("Matrix and vector size dose not match" && mat.cols()==vec.size());
+    Vector< ComponentType > vector_result(mat.rows());
+    for (size_t i = 0; i < mat.rows(); ++i)
     {
-        for (size_t j = 0; j < mat.tensor().shape()[1]; ++j)
+        for (size_t j = 0; j < mat.cols(); ++j)
         {
-            result = mat(i,j) * vec(i) + result;
+            result = mat(i,j) * vec(j) + result;
         }
         vector_result(i) = result;
         result = 0;
     }
-    return result;
+    return vector_result;
 
 }
