@@ -16,6 +16,7 @@ void check(bool condition, const std::string& msg)
 
 void test_matvec(std::vector< std::pair< bool, std::string > >& results)
 {
+
     Matrix< int > A("data/matrix");
     Vector< int > x("data/vector_in");
     Vector< int > y_read("data/vector_out");
@@ -26,7 +27,7 @@ void test_matvec(std::vector< std::pair< bool, std::string > >& results)
 
     auto y_comp = matvec(A, x);
 
-    //results.push_back({y_comp.tensor() == y_read.tensor(), "test_matvec: result equal to file"});
+    results.push_back({y_comp.tensor() == y_read.tensor(), "test_matvec: result equal to file"});
 }
 
 int main()
