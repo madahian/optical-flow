@@ -76,7 +76,7 @@ private:
 template< Arithmetic ComponentType >
 Tensor <ComponentType>::Tensor()
 {
-    data = new ComponentType[0];
+    data = new ComponentType[1];
     data[0] = 0;
     tensor_shape = {};
     tensor_size = 0;
