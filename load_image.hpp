@@ -1,7 +1,7 @@
 #include "matvec.hpp"
 #include "tensor.hpp"
 #include <iostream>
-#include "./CImg/CImg.h"
+#include "CImg/CImg.h"
 #include <vector> 
 std::vector<std::vector<int>> vect;
 using namespace cimg_library;
@@ -11,6 +11,7 @@ Matrix< ComponentType > load_image(const std::string& filename)
 {
 
 	CImg<ComponentType>image(filename.c_str());
+	image.normalize();
 	size_t image_w = image.width();
 	size_t image_h = image.height();
 	Matrix< ComponentType > loaded_matrix(image_w, image_h, 0);
@@ -35,8 +36,8 @@ void save_image(Matrix<ComponentType>& input_matrix ,std::string filename)
 	
 	
 	std::cout << image_h << "   behnam" << std::endl;
-	for (int i = 0;i < image_w;i++) {
-		for (int j = 0;j < image_h;j++) {
+	for (size_t i = 0;i < image_w; i++) {
+		for (size_t j = 0;j < image_h; j++) {
 			
 			image(i, j) = input_matrix(i,j);
 			
@@ -45,7 +46,6 @@ void save_image(Matrix<ComponentType>& input_matrix ,std::string filename)
 	//int vect_w = image.width();
 	//int vect_h = image.height();
 	CImgDisplay main_disp(image, "Click a point");
-	image.normalize();
 	image.save(filename.c_str());
 	while (!main_disp.is_closed()) {
 		main_disp.wait();
