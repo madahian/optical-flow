@@ -106,24 +106,12 @@ public:
     // Element access function
     const ComponentType& operator()(size_t row, size_t col) const
     {
-        if (row >= rows() || col >= cols())
-        {
-            return 0;
-            // OR throw std::out_of_range("Row or column index out of range");
-        }
-
         return tensor_({row, col});
     }
 
     // Element mutation function
     ComponentType& operator()(size_t row, size_t col)
     {
-        if (row >= rows() || col >= cols())
-        {
-            return 0;
-            // OR throw std::out_of_range("Row or column index out of range");
-        }
-
         return tensor_({row, col});
     }
 
