@@ -17,7 +17,9 @@ target_compile_features(test_matvec PRIVATE cxx_std_20)
 target_compile_options(test_matvec PRIVATE -Wall -Wextra -pedantic -Werror -pg -g)
 target_link_options(test_matvec PRIVATE -pg)
 
+
 add_executable(optical_flow optical_flow.cpp)
+target_link_libraries(optical_flow X11)
 target_compile_features(optical_flow PRIVATE cxx_std_20)
 target_compile_options(optical_flow PRIVATE -Wall -Wextra -pedantic -Werror -pg -g)
 target_link_options(optical_flow PRIVATE -pg)
