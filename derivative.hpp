@@ -20,7 +20,7 @@ Derivative::Derivative(const Matrix<float>& img1, const Matrix<float>& img2 ) {
 float Derivative::getIx(size_t i, size_t j) const {
     float Ix = 0;
     if(i+1 >= img1.rows() || j+1 >= img1.cols()) {
-        Ix = (h * (0 - img1(i, j) + 0 - 0 + 0 - img2(i, j) + 0 - 0));
+        Ix = (h * (0 - img1(i, j) - img2(i, j)));
     }else {
         Ix = (h * (img1(i, j+1) - img1(i, j) + img1(i+1, j+1) - img1(i+1, j) + img2(i, j+1) - img2(i, j) + img2(i+1, j+1) - img2(i+1, j)));
     }
@@ -30,9 +30,9 @@ float Derivative::getIx(size_t i, size_t j) const {
 float Derivative::getIy(size_t i, size_t j) const {
     float Iy = 0;
     if(i+1 >= img1.rows() || j+1 >= img1.cols()) {
-        Iy = (h * (0 - img1(i, j) + 0 - 0 + 0 - img2(i, j) + 0 - 0));
+        Iy = (h * (0 - img1(i, j) - img2(i, j)));
     }else {
-        Iy = (h * (img1(i, j+1) - img1(i, j) + img1(i+1, j+1) - img1(i+1, j) + img2(i, j+1) - img2(i, j) + img2(i+1, j+1) - img2(i+1, j)));
+        Iy = (h * (img1(i+1, j) - img1(i, j) + img1(i+1, j+1) - img1(i, j+1) + img2(i+1, j) - img2(i, j) + img2(i+1, j+1) - img2(i, j+1)));
     }
     return Iy;
 }
@@ -40,9 +40,9 @@ float Derivative::getIy(size_t i, size_t j) const {
 float Derivative::getIt(size_t i, size_t j) const {
     float It = 0;
     if(i+1 >= img1.rows() || j+1 >= img1.cols()) {
-        It = (h * (0 - img1(i, j) + 0 - 0 + 0 - img2(i, j) + 0 - 0));
+        It = (h * (img2(i, j) - img1(i, j)));
     }else {
-        It = (h * (img1(i, j+1) - img1(i, j) + img1(i+1, j+1) - img1(i+1, j) + img2(i, j+1) - img2(i, j) + img2(i+1, j+1) - img2(i+1, j)));
+        It = (h * (img2(i, j) - img1(i, j) + img2(i, j+1) - img1(i, j+1) + img2(i+1, j) - img1(i+1, j) + img2(i+1, j+1) - img1(i+1, j+1)));
     }
     return It;
 }
