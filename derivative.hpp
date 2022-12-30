@@ -19,9 +19,16 @@ Derivative::Derivative(const Matrix<float>& img1, const Matrix<float>& img2 ) {
 
 float Derivative::getIx(size_t i, size_t j) const {
     float Ix = 0;
-    if(i+1 >= img1.rows() || j+1 >= img1.cols()) {
+    if(i+1 >= img1.rows()){
+        Ix = (h * (img1(i, j+1) - img1(i, j) + img2(i, j+1) - img2(i, j)));
+    }
+    else if(j+1 >= img1.cols()) {
+        Ix = (h * (0 - img1(i, j) - img1(i+1, j) - img2(i, j) - img2(i+1, j)));
+    }
+    else if(i+1 >= img1.rows() && j+1 >= img1.cols()) {
         Ix = (h * (0 - img1(i, j) - img2(i, j)));
-    }else {
+    }
+    else {
         Ix = (h * (img1(i, j+1) - img1(i, j) + img1(i+1, j+1) - img1(i+1, j) + img2(i, j+1) - img2(i, j) + img2(i+1, j+1) - img2(i+1, j)));
     }
     return Ix;
@@ -29,7 +36,13 @@ float Derivative::getIx(size_t i, size_t j) const {
 
 float Derivative::getIy(size_t i, size_t j) const {
     float Iy = 0;
-    if(i+1 >= img1.rows() || j+1 >= img1.cols()) {
+    if(i+1 >= img1.rows()){
+        Iy = (h * (0 - img1(i, j) - img1(i, j+1) - img2(i, j) - img2(i, j+1)));
+    }
+    else if(j+1 >= img1.cols()) {
+        Iy = (h * (img1(i+1, j) - img1(i, j) + img2(i+1, j) - img2(i, j)));
+    }
+    else if(i+1 >= img1.rows() && j+1 >= img1.cols()) {
         Iy = (h * (0 - img1(i, j) - img2(i, j)));
     }else {
         Iy = (h * (img1(i+1, j) - img1(i, j) + img1(i+1, j+1) - img1(i, j+1) + img2(i+1, j) - img2(i, j) + img2(i+1, j+1) - img2(i, j+1)));
@@ -39,7 +52,13 @@ float Derivative::getIy(size_t i, size_t j) const {
 
 float Derivative::getIt(size_t i, size_t j) const {
     float It = 0;
-    if(i+1 >= img1.rows() || j+1 >= img1.cols()) {
+    if(i+1 >= img1.rows()){
+        It = (h * (img2(i, j) - img1(i, j) + img2(i, j+1) - img1(i, j+1)));
+    }
+    else if(j+1 >= img1.cols()) {
+        It = (h * (img2(i, j) - img1(i, j) + img2(i+1, j) - img1(i+1, j)));
+    }
+    else if(i+1 >= img1.rows() && j+1 >= img1.cols()) {
         It = (h * (img2(i, j) - img1(i, j)));
     }else {
         It = (h * (img2(i, j) - img1(i, j) + img2(i, j+1) - img1(i, j+1) + img2(i+1, j) - img1(i+1, j) + img2(i+1, j+1) - img1(i+1, j+1)));
