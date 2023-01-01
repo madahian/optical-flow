@@ -5,8 +5,8 @@
 //template< typename ComponentType >
 
 int main() {
-	auto loaded_matrix = load_image<float>("../../../test_images/rect_right_100x100_0.bmp");
-	auto loaded_matrix2 = load_image<float>("../../../test_images/rect_right_100x100_1.bmp");
+	auto loaded_matrix = load_image<float>("../../../test_images/rects_640x480_0.bmp");
+	auto loaded_matrix2 = load_image<float>("../../../test_images/rects_640x480_1.bmp");
 	save_image(loaded_matrix, "loadMAtrix");
 	// Example for using Derivative class:
 	Matrix<float> Ix{loaded_matrix.rows(), loaded_matrix.cols()};
