@@ -93,6 +93,45 @@ std::tuple<size_t, size_t> calculate_index(size_t row, size_t col,size_t rows,si
        }
        return std::tuple<size_t, size_t>{row, col};
 }
+Matrix<float> sample_Matrix(std::string matrix) {
+    Matrix<float> mat1(3, 3, 0);
+    Matrix<float>mat2(3, 3, 0);
+    mat1(1, 1) = 1;
+    mat2(0, 1) = 1;
+    Matrix <float> ix(3, 3, 0);
+    Matrix<float> iy(3, 3, 0);
+    Matrix<float> it(3, 3, 0);
+    if (matrix == "mat1") {
+        return mat1;
+    }
+    else if (matrix == "mat2") {
+        return mat2;
+    }
+    else if (matrix == "ix") {
+        ix(0, 0) = (mat1(0, 1) - mat1(0, 0) + mat1(1, 1) - mat1(1, 0) + mat2(0, 1) - mat2(0, 0) + mat2(1, 1) - mat2(1, 0)) / 4;
+        ix(0, 1) = (mat1(0, 2) - mat1(0, 1) + mat1(1, 2) - mat1(1, 1) + mat2(0, 2) - mat2(0, 1) + mat2(1, 2) - mat2(1, 1)) / 4;
+        ix(1, 0) = (mat1(1, 1) - mat1(1, 0) + mat1(2, 1) - mat1(2, 0) + mat2(1, 1) - mat2(1, 0) + mat2(2, 1) - mat2(2, 0)) / 4;
+        ix(1, 1) = (mat1(1, 2) - mat1(1, 1) + mat1(2, 2) - mat1(2, 1) + mat2(1, 2) - mat2(1, 1) + mat2(2, 2) - mat2(2, 1)) / 4;
+        return ix;
+    }
+    else if (matrix == "iy") {
+        iy(0, 0) = (mat1(1, 0) - mat1(0, 0) + mat1(1, 1) - mat1(0, 1) + mat2(1, 0) - mat2(0, 0) + mat2(1, 1) - mat2(0, 1)) / 4;
+        iy(0, 1) = (mat1(1, 1) - mat1(0, 1) + mat1(1, 2) - mat1(0, 2) + mat2(1, 1) - mat2(0, 1) + mat2(1, 2) - mat2(0, 2)) / 4;
+        iy(1, 0) = (mat1(2, 0) - mat1(1, 0) + mat1(2, 1) - mat1(1, 1) + mat2(2, 0) - mat2(1, 0) + mat2(2, 1) - mat2(1, 1)) / 4;
+        iy(1, 1) = (mat1(2, 1) - mat1(1, 1) + mat1(2, 2) - mat1(1, 2) + mat2(2, 1) - mat2(1, 1) + mat2(2, 2) - mat2(1, 2)) / 4;
+        return iy;
+    }
+    else if (matrix == "it") {
+        it(0, 0) = (mat2(0, 0) - mat1(0, 0) + mat2(0, 1) - mat1(0, 1) + mat2(1, 0) - mat1(1, 0) + mat2(1, 1) - mat1(1, 1)) / 4;
+        it(0, 1) = (mat2(0, 1) - mat1(0, 1) + mat2(0, 2) - mat1(0, 2) + mat2(1, 1) - mat1(1, 1) + mat2(1, 2) - mat1(1, 2)) / 4;
+        it(1, 0) = (mat2(1, 0) - mat1(1, 0) + mat2(1, 1) - mat1(1, 1) + mat2(2, 0) - mat1(2, 0) + mat2(2, 1) - mat1(2, 1)) / 4;
+        it(1, 1) = (mat2(1, 1) - mat1(1, 1) + mat2(1, 2) - mat1(1, 2) + mat2(2, 1) - mat1(2, 1) + mat2(2, 2) - mat1(2, 2)) / 4;
+        return it;
+
+    }
+
+
+}
 
 Matrix<float> Derivative::claculate_A(const double alpha) const
 {
