@@ -8,7 +8,7 @@ template<typename ComponentType>
 void getA(Matrix<ComponentType>& Ix, Matrix<ComponentType>& Iy, Matrix<ComponentType>& It) {
     float alpha = 0.5;
     Matrix<float> matA(18, 18, 0);
-    Matrix<float> result(1, 18, 0);
+    //Matrix<float> result(1, 18, 0);
     matA(0, 0) = pow(Ix(0, 0), 2) + 4 * alpha;
     matA(0, 1) = alpha * -1;
     matA(0, 3) = alpha * -1;
