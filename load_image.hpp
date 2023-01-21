@@ -1,6 +1,7 @@
 #include "matvec.hpp"
 #include "tensor.hpp"
 #include <iostream>
+#define cimg_display 0
 #include "CImg/CImg.h"
 #include <vector>
 std::vector<std::vector<int>> vect;

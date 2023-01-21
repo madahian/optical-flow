@@ -129,8 +129,9 @@ Matrix<float> sample_Matrix(std::string matrix) {
         return it;
 
     }
-
-
+    else {
+        return mat1;
+    }
 }
 
 Matrix<float> Derivative::claculate_A(const double alpha) const
