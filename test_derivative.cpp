@@ -2,6 +2,8 @@
 #include "load_image.hpp"
 #include "tensor.hpp"
 #include "derivative.hpp"
+#include "linear.hpp"
+
 //template< typename ComponentType >
  //test A
 template<typename ComponentType>
@@ -164,4 +166,12 @@ int main() {
     std::cout << "IX derivitive: " << Ix.tensor() << std::endl;
     std::cout << "Iy derivitive: " << Iy.tensor() << std::endl;
     std::cout << "It derivitive: " << It.tensor() << std::endl;
+
+    //test linear
+    auto x = solveA(A, b);
+    std::cout << "solution using function :\n" << x<<std::endl;
+    auto u = getU(x, img1.rows(), img1.cols());
+    std::cout << " U:\n " << u.tensor() << std::endl;
+    auto v = getV(x, img1.rows(), img1.cols());
+    std::cout << " V:\n " << v.tensor() << std::endl;
 }
