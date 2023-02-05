@@ -6,10 +6,14 @@ class Derivative {
         float getIx(size_t i, size_t j) const;
         float getIy(size_t i, size_t j) const;
         float getIt(size_t i, size_t j) const;
-        Matrix<float> claculate_A(const double alpha) const;
+        Matrix<float> getA() const;
+        Vector<float> getb() const;
+        void claculate_A_b(const double alpha);
     private:
         Matrix<float> img1;
         Matrix<float> img2;
+        Matrix<float> A;
+        Vector<float> b;
         static constexpr float h = 0.25;
 };
 
@@ -75,23 +79,23 @@ float Derivative::getIt(size_t i, size_t j) const {
 
 std::tuple<size_t, size_t> calculate_index(size_t row, size_t col,size_t rows,size_t cols)
 {
-       if(col+1 == cols)
+   if(col+1 == cols)
+   {
+       if(row+1==rows)
        {
-           if(row+1==rows)
-           {
-           row = 0;
-           }
-           else
-           {
-            row++;
-           }
-            col = 0;
+       row = 0;
        }
        else
        {
-        col++;
+       row++;
        }
-       return std::tuple<size_t, size_t>{row, col};
+       col = 0;
+   }
+   else
+   {
+    col++;
+   }
+   return std::tuple<size_t, size_t>{row, col};
 }
 Matrix<float> sample_Matrix(std::string matrix) {
     Matrix<float> mat1(3, 3, 0);
@@ -134,42 +138,71 @@ Matrix<float> sample_Matrix(std::string matrix) {
     }
 }
 
-Matrix<float> Derivative::claculate_A(const double alpha) const
+void Derivative::claculate_A_b(const double alpha)
 {
     size_t row = 0;
     size_t col = 0;
     size_t matrix_size = img1.rows()*img1.cols();
     Matrix<float> A(2*matrix_size, 2*matrix_size, 0);
+    Vector<float> b(2*matrix_size, 0);
     for(size_t i = 0; i < 2*matrix_size; ++i) {
-
-       //A(i,0) = row;
-       //A(i,1) = col;
-       std::tie (row, col) = calculate_index(row, col, img1.rows(), img1.cols());
-       if(i<matrix_size)
-       {
         auto Ix = this->getIx(row,col);
         auto Iy = this->getIy(row,col);
+        auto It = this->getIt(row,col);
+       if(i<matrix_size)
+       {
         A(i,i) = Ix*Ix + 4* alpha;
         A(i,i+matrix_size) = Ix * Iy;
+        b(i) = -Ix * It;
        }
        else
        {
-        auto Ix = this->getIx(row,col);
-        auto Iy = this->getIy(row,col);
         A(i,i) = Iy*Iy + 4* alpha;
         A(i,i-matrix_size) = Ix * Iy;
+        b(i) = -Iy * It;
        }
-        if(i+1<2*matrix_size)
-       {
-        A(i, i+1) = -1* alpha;
-       }
-        if(i-1>=0 && i>0)
-       {
-        A(i, i-1) = -1* alpha;
-       }
+       if(col>0 && col<(img1.cols()-1))
+           {
+            A(i, i-1) = -1* alpha;
+            A(i, i+1) = -1* alpha;
+           }
+        else if (col==0)
+            {
+             A(i, i+1) = -1* alpha;
+            }
+        else if (col == (img1.cols()-1))
+            {
+             A(i, i-1) = -1* alpha;
+            }
+        if(row>0 && row<(img1.rows()-1))
+           {
+            A(i, i-img1.rows()) = -1* alpha;
+            A(i, i+img1.rows()) = -1* alpha;
+           }
+       else if (row == 0)
+            {
+            A(i, i+img1.rows()) = -1* alpha;
+            }
+       else if (row == img1.rows()-1)
+           {
+            A(i, i-img1.rows()) = -1* alpha;
+           }
+       std::tie (row, col) = calculate_index(row, col, img1.rows(), img1.cols());
+
+
 	}
-	return A;
+	this->A = A;
+	this->b = b;
+
 }
 
+Matrix<float> Derivative::getA() const
+{
+    return this->A;
+}
 
+Vector<float> Derivative::getb() const
+{
+    return this->b;
+}
 

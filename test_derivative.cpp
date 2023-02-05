@@ -5,9 +5,9 @@
 //template< typename ComponentType >
  //test A
 template<typename ComponentType>
-void getA(Matrix<ComponentType>& Ix, Matrix<ComponentType>& Iy, Matrix<ComponentType>& It) {
+Matrix<ComponentType> getA(Matrix<ComponentType>& Ix, Matrix<ComponentType>& Iy, Matrix<ComponentType>& It) {
     float alpha = 0.5;
-    Matrix<float> matA(18, 18, 0);
+    Matrix<ComponentType> matA(18, 18, 0);
     //Matrix<float> result(1, 18, 0);
     matA(0, 0) = pow(Ix(0, 0), 2) + 4 * alpha;
     matA(0, 1) = alpha * -1;
@@ -93,36 +93,31 @@ void getA(Matrix<ComponentType>& Ix, Matrix<ComponentType>& Iy, Matrix<Component
     matA(17, 14) = alpha * -1;
     matA(17, 16) = alpha * -1;
     matA(17, 8) = Ix(2, 2) * Iy(2, 2);
-    for (size_t i = 0;i < 18;i++) {
-        for (size_t j = 0;j < 18;j++) {
-            std::cout << matA(i, j) << "   ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << "Get A Matrix" << std::endl;
+    return matA;
 };
 int main() {
     // load data to a matrix object
-    Matrix<float> img1(3, 3, 1);
+    Matrix<float> img1(3, 3, 3);
     Matrix<float> img2(3, 3, 2);
     // create an object to calculate A and b
     Derivative d1(img1, img2);
     // call a method to calculate A and b
-    auto A = d1.claculate_A(0.5);
-    std::cout << "Matrix A:" << A.tensor() << std::endl;
+    d1.claculate_A_b(0.5);
+    auto A = d1.getA();
+    auto b = d1.getb();
+    std::cout << "Matrix A in method:" << std::endl;
+    std::cout << A.tensor() << std::endl;
 
-    std::cout <<"Matrix 1" <<std::endl <<sample_Matrix("mat1").tensor() << std::endl;
-    std::cout  <<"Matrix 2" << std::endl <<sample_Matrix("mat2").tensor() << std::endl;
-    std::cout << "Manual Ix:" << std::endl << sample_Matrix("ix").tensor() << std::endl;
-    std::cout << "Manual Iy:" << std::endl << sample_Matrix("iy").tensor() << std::endl;
+    std::cout << "Vector b in method:" << std::endl;
+    std::cout << b.tensor() << std::endl << std::endl;
 
-    std::cout << "Manual It:" << std::endl << sample_Matrix("it").tensor() << std::endl;
+
 
     //test for Ix
-    Matrix<float> mat1(3, 3, 1);
+    Matrix<float> mat1(3, 3, 3);
     Matrix<float>mat2(3, 3, 2);
-    mat1(1, 1) = 1;
-    mat2(0, 1) = 1;
+    //mat1(1, 1) = 1;
+    //mat2(0, 1) = 1;
     Matrix<float> Ix(mat1.rows(), mat1.cols());
     Derivative d2(mat1, mat2);
     for (size_t i = 0; i < mat1.rows(); ++i) {
@@ -130,7 +125,7 @@ int main() {
             Ix(i, j) = d2.getIx(i, j);
         }
     }
-    std::cout << "IX derivitive: " << Ix.tensor() << std::endl;
+
 
     //test for Iy
     Matrix<float> Iy(mat1.rows(), mat1.cols());
@@ -140,7 +135,7 @@ int main() {
         }
     }
 
-    std::cout << "Iy derivitive: " << Iy.tensor() << std::endl;
+
     //test for It
     Matrix<float> It(mat1.rows(), mat1.cols());
     for (size_t i = 0; i < mat1.rows(); ++i) {
@@ -149,9 +144,24 @@ int main() {
         }
     }
 
-    std::cout << "It derivitive: " << It.tensor() << std::endl;
-   
-//get a Template function 
-getA(Ix, Iy, It);
 
+
+    //get a Template function
+
+    auto matA = getA(Ix, Iy, It);
+    std::cout << "Matrix A in test:" << std::endl;
+    std::cout << matA.tensor() << std::endl;
+    std::cout << "Are method and tests equals:" << std::endl;
+    if (matA.tensor() == A.tensor())
+    {
+        std::cout << "True"<< std::endl;
+    }
+    std::cout <<"Matrix 1" <<std::endl <<sample_Matrix("mat1").tensor() << std::endl;
+    std::cout  <<"Matrix 2" << std::endl <<sample_Matrix("mat2").tensor() << std::endl;
+    std::cout << "Manual Ix:" << std::endl << sample_Matrix("ix").tensor() << std::endl;
+    std::cout << "Manual Iy:" << std::endl << sample_Matrix("iy").tensor() << std::endl;
+    std::cout << "Manual It:" << std::endl << sample_Matrix("it").tensor() << std::endl;
+    std::cout << "IX derivitive: " << Ix.tensor() << std::endl;
+    std::cout << "Iy derivitive: " << Iy.tensor() << std::endl;
+    std::cout << "It derivitive: " << It.tensor() << std::endl;
 }
