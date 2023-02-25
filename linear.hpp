@@ -7,8 +7,8 @@ template<typename ComponentType>
 Eigen::VectorXd solveA(Matrix<ComponentType>& A, Vector<ComponentType>& b) {
     Eigen::MatrixXd Aa(A.rows(), A.cols());
     Eigen::VectorXd Bb(b.size());
-    for (int i = 0;i < A.rows();i++) {
-        for (int j = 0;j < A.cols();j++) {
+    for (size_t i = 0;i < A.rows();i++) {
+        for (size_t j = 0;j < A.cols();j++) {
             Aa(i, j) = A(i, j);
         }
         Bb(i) = b(i);

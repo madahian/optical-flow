@@ -1,1 +1,5 @@
-echo "The project should be built now..."
+#!/bin/bash
+mkdir -p build
+cd build
+cmake ..
+make

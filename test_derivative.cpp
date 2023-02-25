@@ -7,7 +7,7 @@
 //template< typename ComponentType >
  //test A
 template<typename ComponentType>
-Matrix<ComponentType> getA(Matrix<ComponentType>& Ix, Matrix<ComponentType>& Iy, Matrix<ComponentType>& It) {
+Matrix<ComponentType> getA(Matrix<ComponentType>& Ix, Matrix<ComponentType>& Iy) {
     float alpha = 0.5;
     Matrix<ComponentType> matA(18, 18, 0);
     //Matrix<float> result(1, 18, 0);
@@ -150,7 +150,7 @@ int main() {
 
     //get a Template function
 
-    auto matA = getA(Ix, Iy, It);
+    auto matA = getA(Ix, Iy);
     std::cout << "Matrix A in test:" << std::endl;
     std::cout << matA.tensor() << std::endl;
     std::cout << "Are method and tests equals:" << std::endl;
